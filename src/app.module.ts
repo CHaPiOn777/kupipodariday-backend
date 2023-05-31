@@ -1,9 +1,14 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { User } from './users/entities/user.entity';
 import { WishModule } from './wish/wish.module';
 import { Wish } from './wish/entities/wish.entity';
+import { WishlistModule } from './wishlist/wishlist.module';
+import { OfferModule } from './offer/offer.module';
+import { Wishlist } from './wishlist/entities/wishlist.entity';
+import { Offer } from './offer/entities/offer.entity';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -14,10 +19,10 @@ import { Wish } from './wish/entities/wish.entity';
     password: 'student',
     database: 'kupipodariday',
 
-    entities: [User, Wish],
+    entities: [User, Wish, Wishlist, Offer],
 
     synchronize: true,
-  }), WishModule],
+  }), WishModule, WishlistModule, OfferModule],
   controllers: [AppController],
   providers: [],
 })

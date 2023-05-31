@@ -1,10 +1,13 @@
 import { IsEmail, MinLength, MaxLength, IsFQDN } from 'class-validator';
+import { User } from 'src/users/entities/user.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity()
@@ -35,8 +38,9 @@ export class Wish {
   @Column({scale: 2})
   rised: number;
 
-  @Column()
-  owner: string;
+  @ManyToOne(() => User, (user) => user.wishes)
+  @JoinColumn({ name: 'user.id'})
+  owner: User;
 
   @Column()
   @MinLength(1, {
