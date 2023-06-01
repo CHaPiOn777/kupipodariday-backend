@@ -56,11 +56,12 @@ export class User {
   password: string;
 
   @OneToMany(() => Wish, (wish) => wish.owner)
+  
   wishes: Wish[];
 
   @OneToMany(() => Offer, (offer) => offer.user)
-  offers: Offer.item;
+  offers: Offer[];
 
-  @OneToMany(() => Wishlist, (wishlist) => wishlist.user)
-  wishlists: string;
+  @OneToMany(() => Wishlist, (wishlist) => wishlist.owner)
+  wishlists: Wishlist[];
 }

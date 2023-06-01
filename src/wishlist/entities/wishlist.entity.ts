@@ -1,10 +1,13 @@
 import { MinLength, MaxLength, IsFQDN } from 'class-validator';
+import { User } from 'src/users/entities/user.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToMany,
+  ManyToOne,
 } from 'typeorm';
 
 @Entity()
@@ -41,4 +44,7 @@ export class Wishlist {
   
   @Column("simple-array")
   items: string[];
+
+  @ManyToOne(() => User, (user) => user.wishlists)
+  owner: User;
 }

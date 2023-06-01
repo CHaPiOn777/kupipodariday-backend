@@ -1,5 +1,7 @@
+import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 
 import { User } from './users/entities/user.entity';
 import { WishModule } from './wish/wish.module';
@@ -11,7 +13,11 @@ import { Offer } from './offer/entities/offer.entity';
 import { AppController } from './app.controller';
 
 @Module({
-  imports: [TypeOrmModule.forRoot({
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: '.env'
+    }),
+    TypeOrmModule.forRoot({
     type: 'postgres',
     host: 'localhost',
     port: 5432,
