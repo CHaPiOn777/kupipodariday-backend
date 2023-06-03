@@ -1,4 +1,4 @@
-import { IsEmail, MinLength, MaxLength, IsFQDN } from 'class-validator';
+import { MinLength, MaxLength, IsFQDN } from 'class-validator';
 import { User } from 'src/users/entities/user.entity';
 import {
   Entity,
@@ -9,6 +9,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
+
 
 @Entity()
 export class Wish {
