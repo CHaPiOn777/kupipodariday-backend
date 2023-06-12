@@ -1,4 +1,5 @@
-import { IsEmail, MinLength, MaxLength, IsFQDN } from 'class-validator';
+import { Exclude } from 'class-transformer';
+import { IsEmail, MinLength, MaxLength, IsDate, IsNotEmpty, IsUrl } from 'class-validator';
 import { Offer } from 'src/offer/entities/offer.entity';
 import { Wish } from 'src/wish/entities/wish.entity';
 import { Wishlist } from 'src/wishlist/entities/wishlist.entity';
@@ -17,12 +18,15 @@ export class User {
   id: number;
 
   @CreateDateColumn()
+  @IsDate()
   createdAt: Date;
   
   @UpdateDateColumn()
-  updatedAt: Date;
+  @IsDate()
+  updateAt: Date;
 
   @Column({ unique: true })
+  @IsNotEmpty()
   @MinLength(2, {
     message: 'Title is too short',
   })
@@ -45,14 +49,17 @@ export class User {
   @Column({
     default: 'https://i.pravatar.cc/300',
   })
-  @IsFQDN()
+  @IsUrl()
   avatar: string;
   
   @Column({ unique: true })
   @IsEmail()
+  @IsNotEmpty()
   email: string;
 
   @Column()
+  @IsNotEmpty()
+  @Exclude()
   password: string;
 
   @OneToMany(() => Wish, (wish) => wish.owner)
@@ -65,3 +72,4 @@ export class User {
   @OneToMany(() => Wishlist, (wishlist) => wishlist.owner)
   wishlists: Wishlist[];
 }
+

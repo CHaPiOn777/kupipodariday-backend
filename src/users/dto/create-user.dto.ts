@@ -17,7 +17,7 @@ export class CreateUserDto {
   @IsUrl(undefined, { message: 'Нужно передать URL' })
   avatar: string;
 
-  @IsStrongPassword()
+  // @IsStrongPassword()
   @IsNotEmpty({ message: 'Обязательное поле для заполнения'})
   password: string;
 
@@ -25,11 +25,4 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'Обязательное поле для заполнения'})
   email: string;
 
-  @IsDateString()
-  @IsNotEmpty({ message: 'Обязательное поле для заполнения'})
-  createDt: Date;
-
-  @IsDateString()
-  @IsNotEmpty({ message: 'Обязательное поле для заполнения'})
-  updateAt: Date
 }

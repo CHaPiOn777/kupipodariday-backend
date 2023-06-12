@@ -3,33 +3,48 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
+import { hashValue } from 'src/helpers/hash';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) 
-    private readonly userRepository: Repository<User> 
+    private userRepository: Repository<User> 
   ) {}
-  
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
 
-  async signUp(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const { password } = createUserDto;
+    const user = await this.userRepository.create({
+      ...createUserDto,
+      password: await hashValue(password)
+    })
+    return this.userRepository.save(user)
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findById(id: number): Promise<User> {
+    const user = await this.userRepository.findOneBy({ id });
+    return user;
   }
 
-  async findOne(query: FindOptionsWhere<User>) {
-    return await this.userRepository.findOneByOrFail(query)
+  async findAll(): Promise<User[]> {
+    const users = await this.userRepository.find();
+    return users;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async findOne(query: FindOneOptions<User>) {
+    return await this.userRepository.findOneOrFail(query)
+  }
+
+
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const { password } = updateUserDto;
+    const user = await this.findById(id);
+    if (password) {
+      updateUserDto.password = await hashValue(password);
+    }
+
+    return this.userRepository.save({ ...user, ...updateUserDto })
   }
 
   remove(id: number) {
