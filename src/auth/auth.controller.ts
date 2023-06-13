@@ -13,7 +13,7 @@ export class AuthController {
     private readonly usersService: UsersService
   ) {}
 
-  // @UseGuards(LocalAuthGuard)
+  @UseGuards(LocalAuthGuard)
   @Post('signin')
   login(
     @AuthUser() user: User,
@@ -24,6 +24,6 @@ export class AuthController {
   @Post('/signup')
   async signup(@Body() createUserDto: CreateUserDto) {
     const user = await this.usersService.create(createUserDto);
-    return user;
+    return this.authService.login(user);
   }
 }

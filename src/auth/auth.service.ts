@@ -32,11 +32,11 @@ export class AuthService {
 
 
   async login(user: User) {
-    console.log(user)
     const { username, id: sub } = user;
+console.log(user)
 
     return {
-      acces_token: await this.jwtService.signAsync({ username, sub})
+      access_token: await this.jwtService.signAsync({ username, sub})
     }
   }
 }

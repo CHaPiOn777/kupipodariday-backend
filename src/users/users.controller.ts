@@ -7,7 +7,8 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards
+  UseGuards,
+  Req
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -23,6 +24,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get('me')
   async findOwn(@AuthUser() user: User): Promise<User> {
+    console.log(user)
     return this.usersService.findOne({
       where: { id: user.id },
       select: {
@@ -35,6 +37,14 @@ export class UsersController {
         updateAt: true,
       },
     });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('me')
+  async updateUser(@AuthUser() user: User): Promise<User> {
+
+    return await this.usersService.update(user.id, user);
+    
   }
 
   @Post()
