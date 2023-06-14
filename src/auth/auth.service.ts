@@ -11,12 +11,6 @@ export class AuthService {
     private usersService: UsersService
   ) {}
 
-  auth(user: User) {
-    const payload = { sub: user.id };
-
-    return { acces_token: this.jwtService.sign(payload) }
-  }
-
   async validateUser(username: string, password: string): Promise<any> {
     const user = await this.usersService.findOne({
       select: { username: true, password: true, id: true },
@@ -33,7 +27,6 @@ export class AuthService {
 
   async login(user: User) {
     const { username, id: sub } = user;
-console.log(user)
 
     return {
       access_token: await this.jwtService.signAsync({ username, sub})

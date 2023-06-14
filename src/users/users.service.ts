@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindOneOptions, Like, Repository } from 'typeorm';
 import { hashValue } from 'src/helpers/hash';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const { password } = createUserDto;
-    const user = await this.userRepository.create({
+    const user = this.userRepository.create({
       ...createUserDto,
       password: await hashValue(password)
     })
@@ -27,17 +27,27 @@ export class UsersService {
     return user;
   }
 
-  async findAll(): Promise<User[]> {
-    const users = await this.userRepository.find();
+  async findAll(query: string): Promise<User[]> {
+    let users: User[] | PromiseLike<User[]>;
+    if (query) {
+      users = await this.userRepository.find({
+        where: [
+          { username: Like(`%${query}%`) },
+          { email: Like(`%${query}%`) }
+        ]
+      })
+    } else {
+      users = await this.userRepository.find();
+    }
+   
     return users;
   }
 
   async findOne(query: FindOneOptions<User>) {
     const user = await this.userRepository.findOneOrFail(query)
-    console.log(user, query)
-    return await this.userRepository.findOneOrFail(query)
+    console.log(user)
+    return user
   }
-
 
   async update(id: number, updateUserDto: UpdateUserDto) {
 
@@ -50,7 +60,4 @@ export class UsersService {
     return this.userRepository.save({ ...user, ...updateUserDto })
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
 }
