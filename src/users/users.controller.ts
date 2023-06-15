@@ -15,11 +15,16 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { AuthUser } from 'src/common/decorators/user.decorators';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { Wish } from 'src/wish/entities/wish.entity';
+import { WishService } from 'src/wish/wish.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly wishesService: WishService
+    ) {}
 
   @Get('me')
   async findOwn(@AuthUser() user: User): Promise<User> {
@@ -42,10 +47,17 @@ export class UsersController {
     return await this.usersService.update(user.id, user);
   }
 
+  @Get('me/wishes')
+  async getWishes(@AuthUser() user: User): Promise<Wish[]> {
+
+    return await this.wishesService.findMyWishes(user.id)
+  }
+
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
+  
   @Get(':username')
   async findUser(@Param('username') username: string): Promise<User> {
     return this.usersService.findOne({
@@ -66,9 +78,4 @@ export class UsersController {
   async findAll(@Body() item: { query: string }) {
     return this.usersService.findAll(item.query);
   }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: number) {
-  //   return this.usersService.findOne(id);
-  // }
 }

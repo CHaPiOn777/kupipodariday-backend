@@ -45,7 +45,6 @@ export class UsersService {
 
   async findOne(query: FindOneOptions<User>) {
     const user = await this.userRepository.findOneOrFail(query)
-    console.log(user)
     return user
   }
 

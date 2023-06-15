@@ -1,4 +1,4 @@
-import { MinLength, MaxLength, IsFQDN } from 'class-validator';
+import { MinLength, MaxLength, IsFQDN, IsNotEmpty } from 'class-validator';
 import { User } from 'src/users/entities/user.entity';
 import {
   Entity,
@@ -23,27 +23,32 @@ export class Wish {
   updatedAt: Date;
 
   @Column()
+  @IsNotEmpty()
   name: string;
 
   @Column()
+  @IsNotEmpty()
   @IsFQDN()
   link: string;
 
   @Column()
+  @IsNotEmpty()
   @IsFQDN()
   image: string;
 
   @Column({scale: 2})
+  @IsNotEmpty()
   price: number;
 
-  @Column({scale: 2})
+  @Column({scale: 2, nullable: true})
   rised: number;
 
   @ManyToOne(() => User, (user) => user.wishes)
-  @JoinColumn({ name: 'user.id' })
+  @JoinColumn({ name: 'userId' })
   owner: User;
 
   @Column()
+  @IsNotEmpty()
   @MinLength(1, {
     message: 'Title is too short',
   })
@@ -52,9 +57,9 @@ export class Wish {
   })
   description: string;
 
-  @Column("simple-array")
+  @Column("simple-array", { nullable: true } )
   offers: string[];
   
-  @Column({scale: 2})
+  @Column({scale: 2, nullable: true})
   copied: number;
 }

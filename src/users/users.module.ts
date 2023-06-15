@@ -5,11 +5,14 @@ import { UsersController } from './users.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { AuthModule } from 'src/auth/auth.module';
+import { Wish } from 'src/wish/entities/wish.entity';
+import { WishModule } from 'src/wish/wish.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Wish]),
     forwardRef(() => AuthModule),
+    forwardRef(() => WishModule),
   ],
   controllers: [UsersController],
   providers: [UsersService],
