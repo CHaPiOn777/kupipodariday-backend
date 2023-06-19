@@ -1,3 +1,4 @@
+import { JwtConfigFactory } from './../config/jwt-config.factory';
 import { Module, forwardRef } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
@@ -20,7 +21,7 @@ import { LocalStrategy } from "./strategy/local.strategy";
       inject: [ConfigService]
     })
   ],
-  providers: [AuthService, JwtStrategy, LocalStrategy],
+  providers: [AuthService, JwtStrategy, LocalStrategy, JwtConfigFactory],
   controllers: [AuthController],
   exports: [AuthService],
 })

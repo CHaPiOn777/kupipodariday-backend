@@ -10,7 +10,7 @@ export default () => ({
     name: process.env.POSTGRES_username || 'student',
   },
   jwt: {
-    secret: process.env.SECRET || 'secret',
+    secret: process.env.SECRET || 'JWT_SECRET',
     ttl: process.env.JWT_TTL || '30000s'
   }
 })

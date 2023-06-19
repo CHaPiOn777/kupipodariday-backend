@@ -49,7 +49,6 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-
     const { password } = updateUserDto;
     const user = await this.findById(id);
     if (password) {

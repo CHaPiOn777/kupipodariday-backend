@@ -1,16 +1,14 @@
-import { IsDateString, IsEmail, IsNotEmpty, IsString, IsStrongPassword, IsUrl, MaxLength, MinLength } from "class-validator";
+import { IsDateString, IsEmail, IsNotEmpty, IsString, IsStrongPassword, IsUrl, Length, MaxLength, MinLength } from "class-validator";
 import { Unique } from "typeorm";
 
 export class CreateUserDto {
   @IsString()
-  @MinLength(1, { message: 'Вы ввели слишком мало символов' })
-  @MaxLength(64, { message: 'Вы ввели слишком много символов' })
+  @Length(1, 25)
   @IsNotEmpty({ message: 'Обязательное поле для заполнения'})
   username: string;
 
   @IsString()
-  @MinLength(0, { message: 'Вы ввели слишком мало символов' })
-  @MaxLength(200, { message: 'Вы ввели слишком много символов' })
+  @Length(0, 200)
   about: string;
 
   @IsString()

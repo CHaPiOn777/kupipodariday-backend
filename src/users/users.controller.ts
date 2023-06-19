@@ -43,13 +43,12 @@ export class UsersController {
   }
 
   @Patch('me')
-  async updateUser(@AuthUser() user: User): Promise<User> {
-    return await this.usersService.update(user.id, user);
+  async updateUser(@AuthUser() user: User, @Body() updateUserDto: UpdateUserDto) {
+    return await this.usersService.update(user.id, updateUserDto);
   }
 
   @Get('me/wishes')
   async getWishes(@AuthUser() user: User): Promise<Wish[]> {
-
     return await this.wishesService.findMyWishes(user.id)
   }
 
@@ -61,7 +60,7 @@ export class UsersController {
   @Get(':username')
   async findUser(@Param('username') username: string): Promise<User> {
     return this.usersService.findOne({
-      where: { username},
+      where: { username },
       select: {
         email: true,
         username: true,

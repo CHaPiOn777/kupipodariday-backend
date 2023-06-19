@@ -27,8 +27,12 @@ export class WishController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateWishDto: UpdateWishDto) {
-    return this.wishService.update(+id, updateWishDto);
+  update(
+    @Param('id') id: number, 
+    @Body() updateWishDto: UpdateWishDto,
+    @AuthUser() user: User,
+    ) {
+    return this.wishService.update(id, updateWishDto, user.id);
   }
 
   @Delete(':id')

@@ -44,7 +44,7 @@ export class Wish {
   rised: number;
 
   @ManyToOne(() => User, (user) => user.wishes)
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn()
   owner: User;
 
   @Column()
