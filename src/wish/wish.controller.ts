@@ -21,9 +21,19 @@ export class WishController {
     return this.wishService.findAll();
   }
 
+  @Get('last')
+  findLast() {
+    return this.wishService.findLast()
+  }
+
+  @Get('top')
+  findLast2() {
+    return this.wishService.findPopulate()
+  }
+  
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.wishService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.wishService.findOne(id);
   }
 
   @Patch(':id')
@@ -36,7 +46,7 @@ export class WishController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.wishService.remove(+id);
+  remove(@Param('id') id: number) {
+    return this.wishService.remove(id);
   }
 }

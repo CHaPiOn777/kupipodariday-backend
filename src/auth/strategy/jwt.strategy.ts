@@ -20,8 +20,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     })
   };
 
-  validate(payload: User) {
-    const user = this.usersService.findById(payload.id);
+  async validate(payload: { sub: number }) {
+    const user = await this.usersService.findById(payload.sub);
     if (!user) {
       throw new UnauthorizedException(
         'Неверный логин или пароль пользователя'
