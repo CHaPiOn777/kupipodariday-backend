@@ -21,6 +21,14 @@ export class WishController {
     return this.wishService.findAll();
   }
 
+  @Post(':wishId/copy')
+  async copyWish(
+    @Param('wishId') wishId: number,
+    @AuthUser() user: User
+    ) {
+    return this.wishService.copyWishById(wishId, user)
+  }
+
   @Get('last')
   findLast() {
     return this.wishService.findLast()

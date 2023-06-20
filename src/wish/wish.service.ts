@@ -17,9 +17,8 @@ export class WishService {
   ) {}
 
   async create(createWishDto: CreateWishDto, user: User) {
-    const owner = await this.usersService.findById(user.id)
-    const wishes = this.wishRepository.create({ ...createWishDto, owner });
-    return this.wishRepository.save(wishes);
+    const wish = this.wishRepository.create({ ...createWishDto, owner: user });
+    return await this.wishRepository.save(wish);
   }
 
   async findAll() {
@@ -35,14 +34,13 @@ export class WishService {
     return wishes;
   }
 
-  async findOne(id: number) {
+  async findOne(wishId: number) {
     const wish = await this.wishRepository.findOne({
-      where: { id },
+      where: { id: wishId },
       relations: {
         owner: true
       }
     });
-    console.log(wish)
     return wish
   }
 
@@ -55,6 +53,25 @@ export class WishService {
     const [data] = await this.wishRepository.findAndCount(options);
 
     return data
+  }
+
+  async copyWishById(wishId: number, user: User) {
+    const wish = await this.findOne(wishId);
+    const copyWish = this.wishRepository.create({ ...wish, owner: user });
+    const originalWish = this.wishRepository.create({ ...wish, copied: wish.copied + 1  });
+    await this.wishRepository.insert(copyWish);
+    return await this.wishRepository.save(originalWish); 
+  }
+
+  async wishAllByUsername( username: string ): Promise<Wish[]> {
+    const wish = await this.wishRepository.find({
+      where: { owner: { username } },
+      relations: {
+        owner: true
+      },
+    })
+
+    return wish;
   }
 
   async findPopulate() {
@@ -73,8 +90,8 @@ export class WishService {
     // console.log(wish)
   }
 
-  remove(id: number) {
-
-    return `This action removes a #${id} wish`;
+  async remove(id: number) {
+    const wish = await this.findOne(id)
+    return await this.wishRepository.remove(wish)
   }
 }

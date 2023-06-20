@@ -59,7 +59,7 @@ export class Wish {
 
   @Column("simple-array", { nullable: true } )
   offers: string[];
-  
-  @Column({scale: 2, nullable: true})
+
+  @Column({scale: 2, default: 0})
   copied: number;
 }

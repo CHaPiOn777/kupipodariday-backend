@@ -72,6 +72,11 @@ export class UsersController {
       },
     });
   }
+
+  @Get(':username/wishes')
+  async findUserWishes(@Param('username') username: string): Promise<Wish[]> {
+    return this.wishesService.wishAllByUsername(username)
+  }
   
   @Post('find')
   async findAll(@Body() item: { query: string }) {
