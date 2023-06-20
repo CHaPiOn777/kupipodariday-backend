@@ -1,15 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { OfferService } from './offer.service';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
+import { AuthUser } from 'src/common/decorators/user.decorators';
+import { User } from 'src/users/entities/user.entity';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 
-@Controller('offer')
+@UseGuards(JwtAuthGuard)
+@Controller('offers')
 export class OfferController {
   constructor(private readonly offerService: OfferService) {}
 
   @Post()
-  create(@Body() createOfferDto: CreateOfferDto) {
-    return this.offerService.create(createOfferDto);
+  create(
+    @Body() createOfferDto: CreateOfferDto,
+    @AuthUser() user: User
+    ) {
+      console.log(user)
+    return this.offerService.create(createOfferDto, user);
   }
 
   @Get()

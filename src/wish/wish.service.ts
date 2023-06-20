@@ -6,6 +6,7 @@ import { FindManyOptions, Like, Repository } from 'typeorm';
 import { Wish } from './entities/wish.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersService } from 'src/users/users.service';
+import { Offer } from 'src/offer/entities/offer.entity';
 
 @Injectable()
 export class WishService {
@@ -19,6 +20,15 @@ export class WishService {
   async create(createWishDto: CreateWishDto, user: User) {
     const wish = this.wishRepository.create({ ...createWishDto, owner: user });
     return await this.wishRepository.save(wish);
+  }
+
+  async createOffer(createWishDto: CreateWishDto, offer: Offer) {
+    const wish = this.wishRepository.create({
+      ...createWishDto,
+      offers: [offer],
+      rised: 1
+    })
+    return await this.wishRepository.save(wish)
   }
 
   async findAll() {
@@ -58,7 +68,7 @@ export class WishService {
   async copyWishById(wishId: number, user: User) {
     const wish = await this.findOne(wishId);
     const copyWish = this.wishRepository.create({ ...wish, owner: user });
-    const originalWish = this.wishRepository.create({ ...wish, copied: wish.copied + 1  });
+    const originalWish = this.wishRepository.create({ ...wish, copied: wish.copied + 1 });
     await this.wishRepository.insert(copyWish);
     return await this.wishRepository.save(originalWish); 
   }

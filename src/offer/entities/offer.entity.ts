@@ -26,7 +26,7 @@ export class Offer {
   @OneToMany(() => User, (user) => user.id)
   user: User[];
 
-  @ManyToOne(() => Wish, (wish) => wish.link)
+  @ManyToOne(() => Wish, (wish) => wish.offers)
   item: Wish;
   
   @Column({scale: 2})

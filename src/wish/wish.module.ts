@@ -6,10 +6,12 @@ import { Wish } from './entities/wish.entity';
 import { AuthModule } from 'src/auth/auth.module';
 import { User } from 'src/users/entities/user.entity';
 import { UsersModule } from 'src/users/users.module';
+import { OfferModule } from 'src/offer/offer.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Wish, User]),
+    forwardRef(() => OfferModule),
     forwardRef(() => AuthModule),
     forwardRef(() => UsersModule),
   ],

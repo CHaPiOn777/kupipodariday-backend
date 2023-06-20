@@ -6,21 +6,24 @@ import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { AuthUser } from 'src/common/decorators/user.decorators';
 import { User } from 'src/users/entities/user.entity';
 
-@UseGuards(JwtAuthGuard)
+
 @Controller('wishes')
 export class WishController {
   constructor(private readonly wishService: WishService) {}
-
+  
+  @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createWishDto: CreateWishDto, @AuthUser() user: User ) {
     return this.wishService.create(createWishDto, user);
   }
-
+  
+  @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
     return this.wishService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post(':wishId/copy')
   async copyWish(
     @Param('wishId') wishId: number,
@@ -39,11 +42,13 @@ export class WishController {
     return this.wishService.findPopulate()
   }
   
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.wishService.findOne(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(
     @Param('id') id: number, 
@@ -53,6 +58,7 @@ export class WishController {
     return this.wishService.update(id, updateWishDto, user.id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: number) {
     return this.wishService.remove(id);

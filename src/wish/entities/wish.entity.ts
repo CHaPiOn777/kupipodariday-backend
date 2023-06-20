@@ -1,4 +1,5 @@
 import { MinLength, MaxLength, IsFQDN, IsNotEmpty } from 'class-validator';
+import { Offer } from 'src/offer/entities/offer.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Entity,
@@ -8,6 +9,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 
 
@@ -57,8 +59,9 @@ export class Wish {
   })
   description: string;
 
-  @Column("simple-array", { nullable: true } )
-  offers: string[];
+  @OneToMany(() => Offer, (offer) => offer.item)
+  @JoinColumn()
+  offers: Offer[];
 
   @Column({scale: 2, default: 0})
   copied: number;
