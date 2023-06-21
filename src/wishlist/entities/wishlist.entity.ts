@@ -1,5 +1,6 @@
 import { MinLength, MaxLength, IsFQDN } from 'class-validator';
 import { User } from 'src/users/entities/user.entity';
+import { Wish } from 'src/wish/entities/wish.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -8,6 +9,8 @@ import {
   UpdateDateColumn,
   ManyToMany,
   ManyToOne,
+  DeepPartial,
+  JoinTable,
 } from 'typeorm';
 
 @Entity()
@@ -30,20 +33,22 @@ export class Wishlist {
   })
   name: string;
 
-  @Column({
-    default: 'Пока ничего не рассказал о себе',
-  })
-  @MaxLength(1500, {
-    message: 'Title is too long',
-  })
-  description: string;
+  // @Column({
+  //   default: 'Пока ничего не рассказал о себе',
+  // })
+  // @MaxLength(1500, {
+  //   message: 'Title is too long',
+  // })
+  // description: string;
+
 
   @Column()
   @IsFQDN()
   image: string;
   
-  @Column("simple-array")
-  items: string[];
+  @ManyToMany(() => Wish)
+  @JoinTable()
+  items: Wish[];
 
   @ManyToOne(() => User, (user) => user.wishlists)
   owner: User;

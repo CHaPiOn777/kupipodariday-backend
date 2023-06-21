@@ -2,7 +2,7 @@ import { User } from './../users/entities/user.entity';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
-import { FindManyOptions, Like, Repository } from 'typeorm';
+import { FindManyOptions, Like, Repository, In } from 'typeorm';
 import { Wish } from './entities/wish.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersService } from 'src/users/users.service';
@@ -57,6 +57,33 @@ export class WishService {
     return wish
   }
 
+
+  async findWishList(wishId: number[]) {
+    const wishes = wishId.map(id => {
+      const wish = new Wish();
+      wish.id = id;
+      
+      return wish;
+    })
+    return wishes
+   
+  }
+
+  // async findOneArr(wishId: number[]) {
+  //   const wish = await this.wishRepository.findOneBy({
+  //     where: { id: wishId },
+  //     relations: {
+  //       owner: true,
+  //       offers: true
+  //     }
+  //   });
+  //   return wish
+  // }
+
+  // async findWishlistById(wishId: number[]): Promise<Wish[]> {
+  //   const wish = 
+  // }
+
   async findLast() {
     const options: FindManyOptions<Wish> = {
       order: { id: 'DESC' },
@@ -70,7 +97,7 @@ export class WishService {
 
   async copyWishById(wishId: number, user: User) {
     const wish = await this.findOne(wishId);
-    const copyWish = this.wishRepository.create({ ...wish, owner: user, raised: 0  });
+    const copyWish = this.wishRepository.create({ ...wish, owner: user, raised: 0 });
     const originalWish = this.wishRepository.create({ ...wish, copied: wish.copied + 1});
     await this.wishRepository.insert(copyWish);
     return await this.wishRepository.save(originalWish); 

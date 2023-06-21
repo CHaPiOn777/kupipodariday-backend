@@ -3,7 +3,7 @@ import { WishlistService } from './wishlist.service';
 import { CreateWishlistDto } from './dto/create-wishlist.dto';
 import { UpdateWishlistDto } from './dto/update-wishlist.dto';
 
-@Controller('wishlist')
+@Controller('wishlistlists')
 export class WishlistController {
   constructor(private readonly wishlistService: WishlistService) {}
 
@@ -18,8 +18,8 @@ export class WishlistController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.wishlistService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.wishlistService.findOne(id);
   }
 
   @Patch(':id')
