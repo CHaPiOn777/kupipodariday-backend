@@ -1,5 +1,5 @@
 import { WishService } from './../wish/wish.service';
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -19,11 +19,14 @@ export class OfferService {
   async create(createOfferDto: CreateOfferDto, user: User) {
     const { amount, hidden, itemId } = createOfferDto;
 
-    let wish = await this.wishService.findOne(itemId);
-    let offer;
-    if (wish.price > amount) {
-      offer = this.offerRepository.create({...createOfferDto, user: [user]});
-      const updateWish = await this.wishService.createOffer(wish, offer);
+    const wish = await this.wishService.findOne(itemId);
+    const offer = this.offerRepository.create({...createOfferDto, user: [user], item: wish, hidden: true});
+    console.log(offer)
+    const sum = wish.raised + amount;
+    if (sum > wish.price) {
+      throw new ConflictException('сумма поддержки больше цены');
+    } else {
+      await this.wishService.createPriceWish(wish, amount, offer, wish.id);
     }
     return await this.offerRepository.save(offer)
   }

@@ -1,4 +1,6 @@
-import { IsNotEmpty, IsNumber, IsString, IsUrl, MaxLength, MinLength } from "class-validator";
+import { IsArray, IsEmpty, IsNotEmpty, IsNumber, IsString, IsUrl, MaxLength, MinLength } from "class-validator";
+import { Offer } from "src/offer/entities/offer.entity";
+import { IsNull } from "typeorm";
 
 export class CreateWishDto {
   @IsString()

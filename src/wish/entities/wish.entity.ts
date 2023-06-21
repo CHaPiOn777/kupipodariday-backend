@@ -43,7 +43,7 @@ export class Wish {
   price: number;
 
   @Column({scale: 2, nullable: true})
-  rised: number;
+  raised: number;
 
   @ManyToOne(() => User, (user) => user.wishes)
   @JoinColumn()

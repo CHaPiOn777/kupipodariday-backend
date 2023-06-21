@@ -16,7 +16,6 @@ export class OfferController {
     @Body() createOfferDto: CreateOfferDto,
     @AuthUser() user: User
     ) {
-      console.log(user)
     return this.offerService.create(createOfferDto, user);
   }
 
