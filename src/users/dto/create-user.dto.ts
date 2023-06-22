@@ -1,10 +1,9 @@
-import { IsDateString, IsEmail, IsNotEmpty, IsString, IsStrongPassword, IsUrl, Length, MaxLength, MinLength } from "class-validator";
-import { Unique } from "typeorm";
+import { IsEmail, IsNotEmpty, IsString, IsUrl, Length } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
   @Length(1, 25)
-  @IsNotEmpty({ message: 'Обязательное поле для заполнения'})
+  @IsNotEmpty({ message: 'Обязательное поле для заполнения' })
   username: string;
 
   @IsString()
@@ -16,11 +15,10 @@ export class CreateUserDto {
   avatar: string;
 
   // @IsStrongPassword()
-  @IsNotEmpty({ message: 'Обязательное поле для заполнения'})
+  @IsNotEmpty({ message: 'Обязательное поле для заполнения' })
   password: string;
 
   @IsEmail()
-  @IsNotEmpty({ message: 'Обязательное поле для заполнения'})
+  @IsNotEmpty({ message: 'Обязательное поле для заполнения' })
   email: string;
-
 }

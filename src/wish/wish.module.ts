@@ -17,6 +17,6 @@ import { OfferModule } from 'src/offer/offer.module';
   ],
   controllers: [WishController],
   providers: [WishService],
-  exports: [WishService]
+  exports: [WishService],
 })
 export class WishModule {}

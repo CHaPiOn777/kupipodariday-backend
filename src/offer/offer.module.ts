@@ -17,6 +17,6 @@ import { UsersModule } from 'src/users/users.module';
     forwardRef(() => UsersModule),
   ],
   controllers: [OfferController],
-  providers: [OfferService]
+  providers: [OfferService],
 })
 export class OfferModule {}

@@ -9,7 +9,6 @@ import {
   UpdateDateColumn,
   ManyToMany,
   ManyToOne,
-  DeepPartial,
   JoinTable,
 } from 'typeorm';
 
@@ -20,7 +19,7 @@ export class Wishlist {
 
   @CreateDateColumn()
   createdAt: Date;
-  
+
   @UpdateDateColumn()
   updatedAt: Date;
 
@@ -33,23 +32,15 @@ export class Wishlist {
   })
   name: string;
 
-  // @Column({
-  //   default: 'Пока ничего не рассказал о себе',
-  // })
-  // @MaxLength(1500, {
-  //   message: 'Title is too long',
-  // })
-  // description: string;
-
-
   @Column()
   @IsFQDN()
   image: string;
-  
+
   @ManyToMany(() => Wish)
   @JoinTable()
   items: Wish[];
 
   @ManyToOne(() => User, (user) => user.wishlists)
+  @JoinTable()
   owner: User;
 }

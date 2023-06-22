@@ -1,5 +1,12 @@
 import { Exclude } from 'class-transformer';
-import { IsEmail, MinLength, MaxLength, IsDate, IsNotEmpty, IsUrl } from 'class-validator';
+import {
+  IsEmail,
+  MinLength,
+  MaxLength,
+  IsDate,
+  IsNotEmpty,
+  IsUrl,
+} from 'class-validator';
 import { Offer } from 'src/offer/entities/offer.entity';
 import { Wish } from 'src/wish/entities/wish.entity';
 import { Wishlist } from 'src/wishlist/entities/wishlist.entity';
@@ -20,7 +27,7 @@ export class User {
   @CreateDateColumn()
   @IsDate()
   createdAt: Date;
-  
+
   @UpdateDateColumn()
   @IsDate()
   updateAt: Date;
@@ -51,7 +58,7 @@ export class User {
   })
   @IsUrl()
   avatar: string;
-  
+
   @Column({ unique: true })
   @IsEmail()
   @IsNotEmpty()
@@ -63,7 +70,6 @@ export class User {
   password: string;
 
   @OneToMany(() => Wish, (wish) => wish.owner)
-  
   wishes: Wish[];
 
   @OneToMany(() => Offer, (offer) => offer.user)
@@ -72,4 +78,3 @@ export class User {
   @OneToMany(() => Wishlist, (wishlist) => wishlist.owner)
   wishlists: Wishlist[];
 }
-

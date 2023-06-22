@@ -5,9 +5,7 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   UseGuards,
-  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -23,8 +21,8 @@ import { WishService } from 'src/wish/wish.service';
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly wishesService: WishService
-    ) {}
+    private readonly wishesService: WishService,
+  ) {}
 
   @Get('me')
   async findOwn(@AuthUser() user: User): Promise<User> {
@@ -43,20 +41,23 @@ export class UsersController {
   }
 
   @Patch('me')
-  async updateUser(@AuthUser() user: User, @Body() updateUserDto: UpdateUserDto) {
+  async updateUser(
+    @AuthUser() user: User,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     return await this.usersService.update(user.id, updateUserDto);
   }
 
   @Get('me/wishes')
   async getWishes(@AuthUser() user: User): Promise<Wish[]> {
-    return await this.wishesService.findMyWishes(user.id)
+    return await this.wishesService.findMyWishes(user.id);
   }
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
-  
+
   @Get(':username')
   async findUser(@Param('username') username: string): Promise<User> {
     return this.usersService.findOne({
@@ -75,9 +76,9 @@ export class UsersController {
 
   @Get(':username/wishes')
   async findUserWishes(@Param('username') username: string): Promise<Wish[]> {
-    return this.wishesService.wishAllByUsername(username)
+    return this.wishesService.wishAllByUsername(username);
   }
-  
+
   @Post('find')
   async findAll(@Body() item: { query: string }) {
     return this.usersService.findAll(item.query);

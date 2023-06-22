@@ -1,7 +1,6 @@
 import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { join } from 'path';
 
 import { WishModule } from './wish/wish.module';
 import { WishlistModule } from './wishlist/wishlist.module';
@@ -18,7 +17,7 @@ import { UsersModule } from './users/users.module';
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
-      useClass: DBConfigFactory
+      useClass: DBConfigFactory,
     }),
     UsersModule,
     WishModule,

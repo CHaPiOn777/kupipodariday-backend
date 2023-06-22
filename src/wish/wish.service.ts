@@ -1,8 +1,7 @@
 import { User } from './../users/entities/user.entity';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateWishDto } from './dto/create-wish.dto';
-import { UpdateWishDto } from './dto/update-wish.dto';
-import { FindManyOptions, Like, Repository, In } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { Wish } from './entities/wish.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersService } from 'src/users/users.service';
@@ -10,7 +9,6 @@ import { Offer } from 'src/offer/entities/offer.entity';
 
 @Injectable()
 export class WishService {
-
   constructor(
     @InjectRepository(Wish)
     private readonly wishRepository: Repository<Wish>,
@@ -18,20 +16,25 @@ export class WishService {
   ) {}
 
   async create(createWishDto: CreateWishDto, user: User) {
+    console.log(user);
     const wish = this.wishRepository.create({ ...createWishDto, owner: user });
     return await this.wishRepository.save(wish);
   }
 
-  async createPriceWish(createWishDto: CreateWishDto, amount: number, offer: Offer, id: number) {
-    const wish = await this.findOne(id)
+  async createPriceWish(
+    createWishDto: CreateWishDto,
+    amount: number,
+    offer: Offer,
+    id: number,
+  ) {
+    const wish = await this.findOne(id);
     const updateWish = this.wishRepository.create({
       ...createWishDto,
       offers: [...wish.offers, offer],
-      raised: wish.raised + amount
-    })
-    return await this.wishRepository.save(updateWish)
+      raised: wish.raised + amount,
+    });
+    return await this.wishRepository.save(updateWish);
   }
-
 
   async findAll() {
     const wishes = await this.wishRepository.find();
@@ -39,78 +42,67 @@ export class WishService {
   }
 
   async findMyWishes(id: number) {
-    const wishes = await this.wishRepository.find({ 
-      where: { owner: { id }},
-      relations: ['owner']
+    const wishes = await this.wishRepository.find({
+      where: { owner: { id } },
+      relations: ['owner'],
     });
     return wishes;
   }
 
   async findOne(wishId: number) {
-    const wish = await this.wishRepository.findOne({
+    const wish = await this.wishRepository.findOneOrFail({
       where: { id: wishId },
       relations: {
         owner: true,
-        offers: true
-      }
+        offers: true,
+      },
     });
-    return wish
+    return wish;
   }
-
 
   async findWishList(wishId: number[]) {
-    const wishes = wishId.map(id => {
+    const wishes = wishId.map((id) => {
       const wish = new Wish();
       wish.id = id;
-      
+
       return wish;
-    })
-    return wishes
-   
+    });
+    return wishes;
   }
-
-  // async findOneArr(wishId: number[]) {
-  //   const wish = await this.wishRepository.findOneBy({
-  //     where: { id: wishId },
-  //     relations: {
-  //       owner: true,
-  //       offers: true
-  //     }
-  //   });
-  //   return wish
-  // }
-
-  // async findWishlistById(wishId: number[]): Promise<Wish[]> {
-  //   const wish = 
-  // }
 
   async findLast() {
     const options: FindManyOptions<Wish> = {
       order: { id: 'DESC' },
       take: 40,
-      skip: 0
-    }
+      skip: 0,
+    };
     const [data] = await this.wishRepository.findAndCount(options);
 
-    return data
+    return data;
   }
 
   async copyWishById(wishId: number, user: User) {
     const wish = await this.findOne(wishId);
-    const copyWish = this.wishRepository.create({ ...wish, owner: user, raised: 0 });
-    const originalWish = this.wishRepository.create({ ...wish, copied: wish.copied + 1});
+    const copyWish = this.wishRepository.create({
+      ...wish,
+      owner: user,
+      raised: 0,
+    });
+    const originalWish = this.wishRepository.create({
+      ...wish,
+      copied: wish.copied + 1,
+    });
     await this.wishRepository.insert(copyWish);
-    return await this.wishRepository.save(originalWish); 
+    return await this.wishRepository.save(originalWish);
   }
 
-
-  async wishAllByUsername( username: string ): Promise<Wish[]> {
+  async wishAllByUsername(username: string): Promise<Wish[]> {
     const wish = await this.wishRepository.find({
       where: { owner: { username } },
       relations: {
-        owner: true
+        owner: true,
       },
-    })
+    });
 
     return wish;
   }
@@ -119,22 +111,21 @@ export class WishService {
     const options: FindManyOptions<Wish> = {
       order: { copied: 'DESC' },
       take: 20,
-      skip: 0
-    }
+      skip: 0,
+    };
     const [data] = await this.wishRepository.findAndCount(options);
-
-    return data
+    return data;
   }
 
-  async update(id: number, updateWishDto: UpdateWishDto, userId: number) {
-    // const wish = await this.wishRepository.findOne({userId});
-    // console.log(wish)
-  }
-
-  async remove(id: number) {
+  async remove(id: number, user: User) {
     const wish = await this.findOne(id);
+    if (user.id !== wish.owner.id) {
+      throw new ConflictException(
+        'Удалить список подарков может только создавший его пользователь',
+      );
+    }
     if (wish.raised === 0) {
-      return await this.wishRepository.remove(wish)
+      return await this.wishRepository.remove(wish);
     } else {
       throw new ConflictException('rised is not null');
     }

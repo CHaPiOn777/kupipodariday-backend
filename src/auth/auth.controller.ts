@@ -10,15 +10,13 @@ import { User } from 'src/users/entities/user.entity';
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
   ) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('signin')
-  login(
-    @AuthUser() user: User,
-  ): Promise<any> {
-    return this.authService.login(user)
+  login(@AuthUser() user: User): Promise<any> {
+    return this.authService.login(user);
   }
 
   @Post('/signup')

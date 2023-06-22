@@ -9,17 +9,17 @@ import { hashValue } from 'src/helpers/hash';
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User) 
-    private userRepository: Repository<User> 
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const { password } = createUserDto;
     const user = this.userRepository.create({
       ...createUserDto,
-      password: await hashValue(password)
-    })
-    return this.userRepository.save(user)
+      password: await hashValue(password),
+    });
+    return this.userRepository.save(user);
   }
 
   async findById(id: number): Promise<User> {
@@ -34,19 +34,19 @@ export class UsersService {
       users = await this.userRepository.find({
         where: [
           { username: Like(`%${query}%`) },
-          { email: Like(`%${query}%`) }
-        ]
-      })
+          { email: Like(`%${query}%`) },
+        ],
+      });
     } else {
       users = await this.userRepository.find();
     }
-   
+
     return users;
   }
 
   async findOne(query: FindOneOptions<User>) {
-    const user = await this.userRepository.findOneOrFail(query)
-    return user
+    const user = await this.userRepository.findOneOrFail(query);
+    return user;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
@@ -56,7 +56,6 @@ export class UsersService {
       updateUserDto.password = await hashValue(password);
     }
 
-    return this.userRepository.save({ ...user, ...updateUserDto })
+    return this.userRepository.save({ ...user, ...updateUserDto });
   }
-
 }

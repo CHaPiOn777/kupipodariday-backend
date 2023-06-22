@@ -11,20 +11,24 @@ export class OfferService {
   constructor(
     @InjectRepository(Offer)
     private readonly offerRepository: Repository<Offer>,
-    private readonly wishService: WishService
+    private readonly wishService: WishService,
   ) {}
 
   async create(createOfferDto: CreateOfferDto, user: User) {
     const { amount, itemId } = createOfferDto;
     const wish = await this.wishService.findOne(itemId);
-    const offer = this.offerRepository.create({ ...createOfferDto, user: [user], item: wish });
+    const offer = this.offerRepository.create({
+      ...createOfferDto,
+      user: [user],
+      item: wish,
+    });
     const sum = wish.raised + amount;
     if (sum > wish.price) {
       throw new ConflictException('сумма поддержки больше цены');
     } else {
-      // await this.wishService.createPriceWish(wish, amount, offer, wish.id);
+      await this.wishService.createPriceWish(wish, amount, offer, wish.id);
     }
-    return await this.offerRepository.save(offer)
+    return await this.offerRepository.save(offer);
   }
 
   async findAll() {
@@ -32,7 +36,6 @@ export class OfferService {
   }
 
   async findOne(id: number) {
-    return await this.offerRepository.findOne({ where: { id }});
+    return await this.offerRepository.findOne({ where: { id } });
   }
-
 }

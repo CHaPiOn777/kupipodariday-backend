@@ -6,30 +6,29 @@ import { verifyHash } from 'src/helpers/hash';
 
 @Injectable()
 export class AuthService {
-  constructor (
+  constructor(
     private jwtService: JwtService,
-    private usersService: UsersService
+    private usersService: UsersService,
   ) {}
 
   async validateUser(username: string, password: string): Promise<any> {
     const user = await this.usersService.findOne({
       select: { username: true, password: true, id: true },
-      where: { username: username }
+      where: { username: username },
     });
 
     if (user && (await verifyHash(password, user.password))) {
       const { password, ...result } = user;
-      return result
+      return result;
     }
-    return null
-  };
-
+    return null;
+  }
 
   async login(user: User) {
     const { username, id: sub } = user;
 
     return {
-      access_token: await this.jwtService.signAsync({ username, sub })
-    }
+      access_token: await this.jwtService.signAsync({ username, sub }),
+    };
   }
 }

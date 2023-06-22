@@ -1,4 +1,3 @@
-import { MinLength, MaxLength, IsFQDN } from 'class-validator';
 import { User } from 'src/users/entities/user.entity';
 import { Wish } from 'src/wish/entities/wish.entity';
 import {
@@ -8,7 +7,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
-  ManyToMany,
   ManyToOne,
 } from 'typeorm';
 
@@ -19,7 +17,7 @@ export class Offer {
 
   @CreateDateColumn()
   createdAt: Date;
-  
+
   @UpdateDateColumn()
   updatedAt: Date;
 
@@ -28,14 +26,13 @@ export class Offer {
 
   @ManyToOne(() => Wish, (wish) => wish.offers)
   item: Wish;
-  
-  @Column({scale: 2})
+
+  @Column({ scale: 2 })
   amount: number;
 
   @Column({
     scale: 2,
-    default: false
+    default: false,
   })
   hidden: boolean;
 }
-

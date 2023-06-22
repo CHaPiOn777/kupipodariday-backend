@@ -11,10 +11,7 @@ export class OfferController {
   constructor(private readonly offerService: OfferService) {}
 
   @Post()
-  create(
-    @Body() createOfferDto: CreateOfferDto,
-    @AuthUser() user: User
-    ) {
+  create(@Body() createOfferDto: CreateOfferDto, @AuthUser() user: User) {
     return this.offerService.create(createOfferDto, user);
   }
 
@@ -27,5 +24,4 @@ export class OfferController {
   findOne(@Param('id') id: number) {
     return this.offerService.findOne(id);
   }
-
 }

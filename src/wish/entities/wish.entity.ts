@@ -12,7 +12,6 @@ import {
   OneToMany,
 } from 'typeorm';
 
-
 @Entity()
 export class Wish {
   @PrimaryGeneratedColumn()
@@ -20,7 +19,7 @@ export class Wish {
 
   @CreateDateColumn()
   createdAt: Date;
-  
+
   @UpdateDateColumn()
   updatedAt: Date;
 
@@ -38,11 +37,11 @@ export class Wish {
   @IsFQDN()
   image: string;
 
-  @Column({scale: 2})
+  @Column({ scale: 2 })
   @IsNotEmpty()
   price: number;
 
-  @Column({scale: 2, nullable: true})
+  @Column({ scale: 2, default: 0 })
   raised: number;
 
   @ManyToOne(() => User, (user) => user.wishes)
@@ -63,6 +62,6 @@ export class Wish {
   @JoinColumn()
   offers: Offer[];
 
-  @Column({scale: 2, default: 0})
+  @Column({ scale: 2, default: 0 })
   copied: number;
 }
