@@ -41,7 +41,7 @@ export class WishController {
   }
 
   @Get('top')
-  findLast2() {
+  findTop() {
     return this.wishService.findPopulate();
   }
 

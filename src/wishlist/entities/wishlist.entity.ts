@@ -1,28 +1,11 @@
 import { MinLength, MaxLength, IsFQDN } from 'class-validator';
+import { BaseEntity } from 'src/helpers/baseEntity';
 import { User } from 'src/users/entities/user.entity';
 import { Wish } from 'src/wish/entities/wish.entity';
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  ManyToMany,
-  ManyToOne,
-  JoinTable,
-} from 'typeorm';
+import { Entity, Column, ManyToMany, ManyToOne, JoinTable } from 'typeorm';
 
 @Entity()
-export class Wishlist {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
+export class Wishlist extends BaseEntity {
   @Column({ unique: true })
   @MinLength(1, {
     message: 'Title is too short',

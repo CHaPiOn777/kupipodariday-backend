@@ -24,7 +24,7 @@ export class AuthService {
     return null;
   }
 
-  async login(user: User) {
+  async login(user: User): Promise<{ access_token: string }> {
     const { username, id: sub } = user;
 
     return {
