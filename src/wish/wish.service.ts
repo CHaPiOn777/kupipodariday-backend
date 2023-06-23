@@ -15,8 +15,7 @@ export class WishService {
     private readonly usersService: UsersService,
   ) {}
 
-  async create(createWishDto: CreateWishDto, user: User) {
-    console.log(user);
+  async create(createWishDto: CreateWishDto, user: User): Promise<Wish> {
     const wish = this.wishRepository.create({ ...createWishDto, owner: user });
     return await this.wishRepository.save(wish);
   }
@@ -26,7 +25,7 @@ export class WishService {
     amount: number,
     offer: Offer,
     id: number,
-  ) {
+  ): Promise<Wish> {
     const wish = await this.findOne(id);
     const updateWish = this.wishRepository.create({
       ...createWishDto,
@@ -36,12 +35,12 @@ export class WishService {
     return await this.wishRepository.save(updateWish);
   }
 
-  async findAll() {
+  async findAll(): Promise<Wish[]> {
     const wishes = await this.wishRepository.find();
     return wishes;
   }
 
-  async findMyWishes(id: number) {
+  async findMyWishes(id: number): Promise<Wish[]> {
     const wishes = await this.wishRepository.find({
       where: { owner: { id } },
       relations: ['owner'],
@@ -49,7 +48,7 @@ export class WishService {
     return wishes;
   }
 
-  async findOne(wishId: number) {
+  async findOne(wishId: number): Promise<Wish> {
     const wish = await this.wishRepository.findOneOrFail({
       where: { id: wishId },
       relations: {
@@ -60,7 +59,7 @@ export class WishService {
     return wish;
   }
 
-  async findWishList(wishId: number[]) {
+  async findWishList(wishId: number[]): Promise<Wish[]> {
     const wishes = wishId.map((id) => {
       const wish = new Wish();
       wish.id = id;
@@ -70,7 +69,7 @@ export class WishService {
     return wishes;
   }
 
-  async findLast() {
+  async findLast(): Promise<Wish[]> {
     const options: FindManyOptions<Wish> = {
       order: { id: 'DESC' },
       take: 40,
@@ -81,7 +80,7 @@ export class WishService {
     return data;
   }
 
-  async copyWishById(wishId: number, user: User) {
+  async copyWishById(wishId: number, user: User): Promise<Wish> {
     const wish = await this.findOne(wishId);
     const copyWish = this.wishRepository.create({
       ...wish,
@@ -107,10 +106,10 @@ export class WishService {
     return wish;
   }
 
-  async findPopulate() {
+  async findPopulate(): Promise<Wish[]> {
     const options: FindManyOptions<Wish> = {
       order: { copied: 'DESC' },
-      take: 20,
+      take: 10,
       skip: 0,
     };
     const [data] = await this.wishRepository.findAndCount(options);

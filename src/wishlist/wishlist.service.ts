@@ -14,7 +14,10 @@ export class WishlistService {
     private readonly wishService: WishService,
   ) {}
 
-  async create(createWishlistDto: CreateWishlistDto, user: User) {
+  async create(
+    createWishlistDto: CreateWishlistDto,
+    user: User,
+  ): Promise<Wishlist> {
     const { itemsId } = createWishlistDto;
     const wishes = itemsId.map((id) => {
       return this.wishService.findOne(id);
@@ -29,14 +32,14 @@ export class WishlistService {
     });
   }
 
-  async findAll() {
+  async findAll(): Promise<Wishlist[]> {
     return await this.wishlistRepository.find({
       relations: { owner: true },
       order: { id: 'DESC' },
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<Wishlist> {
     return await this.wishlistRepository.findOne({
       where: { id },
       relations: { items: true, owner: true },

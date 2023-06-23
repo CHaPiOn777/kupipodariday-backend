@@ -35,7 +35,7 @@ export class UsersController {
         avatar: true,
         about: true,
         createdAt: true,
-        updateAt: true,
+        updatedAt: true,
       },
     });
   }
@@ -69,7 +69,7 @@ export class UsersController {
         avatar: true,
         about: true,
         createdAt: true,
-        updateAt: true,
+        updatedAt: true,
       },
     });
   }

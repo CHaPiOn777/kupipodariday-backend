@@ -1,8 +1,8 @@
 {
   "name": "kupipodariday-backend",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Сервис для подарков. Учебный проект по бэкенду ЯП",
+  "author": "Vladislav_Shishkin",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

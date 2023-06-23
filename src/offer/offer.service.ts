@@ -14,7 +14,7 @@ export class OfferService {
     private readonly wishService: WishService,
   ) {}
 
-  async create(createOfferDto: CreateOfferDto, user: User) {
+  async create(createOfferDto: CreateOfferDto, user: User): Promise<Offer> {
     const { amount, itemId } = createOfferDto;
     const wish = await this.wishService.findOne(itemId);
     const offer = this.offerRepository.create({
@@ -23,6 +23,9 @@ export class OfferService {
       item: wish,
     });
     const sum = wish.raised + amount;
+    if (wish.owner.id === user.id) {
+      throw new ConflictException('Вы не можете скидываться на свой подарок');
+    }
     if (sum > wish.price) {
       throw new ConflictException('сумма поддержки больше цены');
     } else {
@@ -31,11 +34,11 @@ export class OfferService {
     return await this.offerRepository.save(offer);
   }
 
-  async findAll() {
+  async findAll(): Promise<Offer[]> {
     return await this.offerRepository.find();
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<Offer> {
     return await this.offerRepository.findOne({ where: { id } });
   }
 }

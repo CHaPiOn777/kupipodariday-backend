@@ -1,28 +1,11 @@
 import { MinLength, MaxLength, IsFQDN, IsNotEmpty } from 'class-validator';
+import { BaseEntity } from 'src/helpers/baseEntity';
 import { Offer } from 'src/offer/entities/offer.entity';
 import { User } from 'src/users/entities/user.entity';
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
-  OneToMany,
-} from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 
 @Entity()
-export class Wish {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
+export class Wish extends BaseEntity {
   @Column()
   @IsNotEmpty()
   name: string;
